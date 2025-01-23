@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import DataTable from "react-data-table-component";
+import { createTheme } from "react-data-table-component";
+
 
 const fetchData = () => {
     return [
@@ -8,7 +10,45 @@ const fetchData = () => {
       { id: 3, name: "Sam Wilson", email: "sam@example.com", role: "Editor" },
     ];
   };
+
+  createTheme("light", {
+    text: {
+      primary: "#1E1E1E",
+      secondary: "#2E2E2E",
+    },
+    background: {
+      default: "#FFFFFF",
+    },
+    divider: {
+      default: "#E0E0E0",
+    },
+  });
+  
+  createTheme("dark", {
+    text: {
+      primary: "#FFFFFF",
+      secondary: "#A0A0A0",
+    },
+    background: {
+      default: "#1E1E2F",
+    },
+    divider: {
+      default: "#4A4A4A",
+    },
+  });
   const StudentList = () => {
+    const [isDarkMode, setIsDarkMode] = useState(false);
+      useEffect(() => {
+        const savedTheme = localStorage.getItem("theme");
+        console.log(savedTheme);
+        if (savedTheme === "dark") {
+          setIsDarkMode(true);
+          document.documentElement.classList.add("dark");
+        } else {
+          setIsDarkMode(false);
+          document.documentElement.classList.remove("dark");
+        }
+      }, []);
     const [data, setData] = useState([]);
     const [filterText, setFilterText] = useState("");
     const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
@@ -97,7 +137,7 @@ const fetchData = () => {
     ];
   
     return (
-      <div className="p-4">
+      <div className="p-4 h-screen  bg-[#f0efef] dark:bg-gray-600 dark:text-white">
         <h1 className="text-2xl font-bold mb-4">Student Listing</h1>
   
         <div className="mb-4">
@@ -133,6 +173,7 @@ const fetchData = () => {
           paginationResetDefaultPage={resetPaginationToggle}
           highlightOnHover
           striped
+          theme={isDarkMode ? "dark" : "light"} 
         />
   
       

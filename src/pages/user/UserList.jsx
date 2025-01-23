@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import DataTable from "react-data-table-component";
-
+import { createTheme } from "react-data-table-component";
 
 const fetchData = () => {
   return [
@@ -9,13 +9,52 @@ const fetchData = () => {
     { id: 3, name: "Sam Wilson", email: "sam@example.com", role: "Editor" },
   ];
 };
+createTheme("light", {
+  text: {
+    primary: "#1E1E1E",
+    secondary: "#2E2E2E",
+  },
+  background: {
+    default: "#FFFFFF",
+  },
+  divider: {
+    default: "#E0E0E0",
+  },
+});
+
+createTheme("dark", {
+  text: {
+    primary: "#FFFFFF",
+    secondary: "#A0A0A0",
+  },
+  background: {
+    default: "#1E1E2F",
+  },
+  divider: {
+    default: "#4A4A4A",
+  },
+});
 
 const UserList = () => {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme");
+    console.log(savedTheme);
+    if (savedTheme === "dark") {
+      setIsDarkMode(true);
+      document.documentElement.classList.add("dark");
+    } else {
+      setIsDarkMode(false);
+      document.documentElement.classList.remove("dark");
+    }
+  }, []);
+
   const [data, setData] = useState([]);
   const [filterText, setFilterText] = useState("");
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null); 
-  const [isModalOpen, setIsModalOpen] = useState(false); 
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [newUser, setNewUser] = useState({ name: "", email: "", role: "" });
 
   useEffect(() => {
@@ -23,13 +62,11 @@ const UserList = () => {
     setData(result);
   }, []);
 
-
   const handleAddUser = () => {
     setData([...data, { ...newUser, id: data.length + 1 }]);
-    setIsModalOpen(false); 
-    setNewUser({ name: "", email: "", role: "" }); 
+    setIsModalOpen(false);
+    setNewUser({ name: "", email: "", role: "" });
   };
-
 
   const handleEditUser = () => {
     const updatedData = data.map((user) =>
@@ -41,17 +78,14 @@ const UserList = () => {
     setNewUser({ name: "", email: "", role: "" });
   };
 
-
   const handleDeleteUser = (id) => {
     setData(data.filter((user) => user.id !== id));
   };
-
 
   const filteredData = data.filter(
     (item) =>
       item.name && item.name.toLowerCase().includes(filterText.toLowerCase())
   );
-
 
   const columns = [
     {
@@ -99,7 +133,7 @@ const UserList = () => {
   ];
 
   return (
-    <div className="p-4">
+    <div className="p-4 h-screen  bg-[#f0efef] dark:bg-gray-600 dark:text-white">
       <h1 className="text-2xl font-bold mb-4">User Listing</h1>
 
       <div className="mb-4">
@@ -135,9 +169,9 @@ const UserList = () => {
         paginationResetDefaultPage={resetPaginationToggle}
         highlightOnHover
         striped
+        theme={isDarkMode ? "dark" : "light"}
       />
 
-    
       {isModalOpen && (
         <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-6 rounded shadow-lg w-96">
@@ -150,7 +184,9 @@ const UserList = () => {
                 type="text"
                 className="w-full p-2 border rounded"
                 value={newUser.name}
-                onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
+                onChange={(e) =>
+                  setNewUser({ ...newUser, name: e.target.value })
+                }
               />
             </div>
             <div className="mb-4">
@@ -159,7 +195,9 @@ const UserList = () => {
                 type="email"
                 className="w-full p-2 border rounded"
                 value={newUser.email}
-                onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+                onChange={(e) =>
+                  setNewUser({ ...newUser, email: e.target.value })
+                }
               />
             </div>
             <div className="mb-4">
@@ -168,7 +206,9 @@ const UserList = () => {
                 type="text"
                 className="w-full p-2 border rounded"
                 value={newUser.role}
-                onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
+                onChange={(e) =>
+                  setNewUser({ ...newUser, role: e.target.value })
+                }
               />
             </div>
             <div className="flex justify-end space-x-2">
