@@ -5,7 +5,11 @@ import { FaBars, FaTimes, FaMoon, FaSun } from "react-icons/fa";
 const SideBar = () => {
   const [isOpen, setIsOpen] = useState(true);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isOrganizationOpen, setIsOrganizationOpen] = useState(false);
 
+  const toggleOrganization = () => {
+    setIsOrganizationOpen((prevState) => !prevState);
+  };
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme === "dark") {
@@ -76,6 +80,42 @@ const SideBar = () => {
           >
             {isOpen && <span>Student</span>}
           </Link>
+          <div
+            className="flex flex-col items-start gap-3 px-4 py-2 rounded cursor-pointer hover:bg-gray-700 focus:bg-gray-700 dark:hover:bg-gray-600"
+            onClick={toggleOrganization}
+          >
+            {isOpen && <span>Organization</span>}
+          </div>
+
+          {isOrganizationOpen && (
+            <div className="ml-4 space-y-2">
+              <Link
+                to="/org-list"
+                className="flex items-center gap-3 px-4 py-2 rounded hover:bg-gray-700 focus:bg-gray-700 dark:hover:bg-gray-600"
+              >
+                <span>Organization</span>
+              </Link>
+              <Link
+                to="/group-list"
+                className="flex items-center gap-3 px-4 py-2 rounded hover:bg-gray-700 focus:bg-gray-700 dark:hover:bg-gray-600"
+              >
+                <span>Group</span>
+              </Link>
+              <Link
+                to="/department-list"
+                className="flex items-center gap-3 px-4 py-2 rounded hover:bg-gray-700 focus:bg-gray-700 dark:hover:bg-gray-600"
+              >
+                <span>Department</span>
+              </Link>
+              <Link
+                to="/role-list"
+                className="flex items-center gap-3 px-4 py-2 rounded hover:bg-gray-700 focus:bg-gray-700 dark:hover:bg-gray-600"
+              >
+                <span>Role</span>
+              </Link>
+            </div>
+          )}
+
           <Link
             to="/logout"
             className="flex items-center  gap-3 px-4 py-2 rounded hover:bg-gray-700 focus:bg-gray-700 dark:hover:bg-gray-600"
