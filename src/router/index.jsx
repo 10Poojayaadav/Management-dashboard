@@ -9,6 +9,7 @@ import GroupList from "../pages/group/GroupList";
 import DepartList from "../pages/department/DepartList";
 
 
+
 export default function AppRouter() {
   return (
     <Routes>

@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaBars, FaTimes, FaMoon, FaSun } from "react-icons/fa";
+import Swal from "sweetalert2";
+
 
 const SideBar = () => {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(true);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isOrganizationOpen, setIsOrganizationOpen] = useState(false);
@@ -20,6 +23,23 @@ const SideBar = () => {
       document.documentElement.classList.remove("dark");
     }
   }, []);
+
+  const handleLogout = () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You will be logged out of your account.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, logout!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire("Logged out!", "You have been logged out.", "success");
+        navigate("/login"); 
+      }
+    });
+  };
 
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
@@ -41,7 +61,7 @@ const SideBar = () => {
       <div
         className={`${
           isOpen ? "w-64" : "w-16"
-        } h-screen bg-gray-300 text-black flex flex-col transition-all duration-300 ease-in-out relative dark:bg-gray-900 dark:text-gray-100 `}
+        } h-auto bg-gray-300 text-black flex flex-col transition-all duration-300 ease-in-out relative dark:bg-gray-900 dark:text-gray-100 `}
       >
         <button
           onClick={toggleSidebar}
@@ -117,7 +137,7 @@ const SideBar = () => {
           )}
 
           <Link
-            to="/logout"
+          onClick={handleLogout}
             className="flex items-center  gap-3 px-4 py-2 rounded hover:bg-gray-700 focus:bg-gray-700 dark:hover:bg-gray-600"
           >
             {isOpen && <span>Logout</span>}
@@ -126,7 +146,7 @@ const SideBar = () => {
 
         <button
           onClick={toggleTheme}
-          className="p-4 bg-gray-600 text-white rounded-md absolute bottom-4 left-4"
+          className="p-4 bg-gray-600 text-white rounded-md fixed bottom-4 left-4"
         >
           {isDarkMode ? <FaSun size={20} /> : <FaMoon size={20} />}
         </button>
